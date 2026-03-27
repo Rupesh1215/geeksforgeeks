@@ -1,0 +1,63 @@
+class Solution {
+    public int maxChocolate(int grid[][]) {
+        int n = grid.length;
+        int m = grid[0].length;
+        
+        int[][] dp = new int[m][m];
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < m; j++) {
+                dp[i][j] = -1;
+            }
+        }
+        
+        if (0 == m-1) {
+            dp[0][m-1] = grid[0][0];
+        } else {
+            dp[0][m-1] = grid[0][0] + grid[0][m-1];
+        }
+        
+        for (int row = 0; row < n - 1; row++) {
+            int[][] nextDp = new int[m][m];
+            
+            for (int i = 0; i < m; i++) {
+                for (int j = 0; j < m; j++) {
+                    nextDp[i][j] = -1;
+                }
+            }
+            
+            for (int col1 = 0; col1 < m; col1++) {
+                for (int col2 = 0; col2 < m; col2++) {
+                    if (dp[col1][col2] == -1) continue;
+                    
+                    for (int nextCol1 = Math.max(0, col1 - 1); nextCol1 <= Math.min(m - 1, col1 + 1); nextCol1++) {
+                        for (int nextCol2 = Math.max(0, col2 - 1); nextCol2 <= Math.min(m - 1, col2 + 1); nextCol2++) {
+                            int chocolates;
+                            if (nextCol1 == nextCol2) {
+                                chocolates = grid[row + 1][nextCol1];
+                            } else {
+                                chocolates = grid[row + 1][nextCol1] + grid[row + 1][nextCol2];
+                            }
+                            
+                            nextDp[nextCol1][nextCol2] = Math.max(
+                                nextDp[nextCol1][nextCol2],
+                                dp[col1][col2] + chocolates
+                            );
+                        }
+                    }
+                }
+            }
+            
+            dp = nextDp;
+        }
+        
+        int maxChocolates = 0;
+        for (int col1 = 0; col1 < m; col1++) {
+            for (int col2 = 0; col2 < m; col2++) {
+                maxChocolates = Math.max(maxChocolates, dp[col1][col2]);
+            }
+        }
+        
+        return maxChocolates;
+    }
+}
