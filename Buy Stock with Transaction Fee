@@ -1,0 +1,18 @@
+class Solution {
+  public:
+    int maxProfit(vector<int>& arr, int k) {
+        if (arr.empty()) return 0;
+
+        int hold = -arr[0]; 
+        int cash = 0;  
+
+        for (int i = 1; i < arr.size(); i++) {
+            int prevHold = hold;
+
+            hold = max(hold, cash - arr[i]);          
+            cash = max(cash, prevHold + arr[i] - k);  
+        }
+
+        return cash;
+    }
+};
